@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="A premium, colorful, and fully-featured 2D Block Breaker game with dynamic synthesis sound, responsive touch controls, and level progression.">
+  <title>CyberBreak - Block Breaker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+  <div class="cyber-grid"></div>
+  <div class="ambient-glow"></div>
+
+  
+  <div id="game-container" class="game-container">
+    
+    
+    <header id="game-hud" class="game-hud hidden">
+      <div class="hud-item">
+        <span class="hud-label">SCORE</span>
+        <span id="hud-score" class="hud-value value-glow">00000</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">LEVEL</span>
+        <span id="hud-level" class="hud-value">1</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">LIVES</span>
+        <div id="hud-lives" class="hud-lives-container">
+          
+        </div>
+      </div>
+      <button id="btn-pause-toggle" class="btn-icon" aria-label="Pause Game">
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </button>
+    </header>
+
+    
+    <div class="canvas-wrapper">
+      <canvas id="game-canvas"></canvas>
+      
+      <div id="powerup-indicators" class="powerup-indicators"></div>
+    </div>
+
+    <section id="screen-main-menu" class="screen-overlay active">
+    <section id="screen-main-menu" class="screen-overlay active">
+      <div class="menu-box">
+        <div class="welcome-banner" id="welcome-banner"></div>
+        <h1 class="game-title">CYBER<span class="text-neon-pink">BREAK</span></h1>
+        <p class="game-subtitle">A Neon Brick-Breaking Experience</p>
+        
+        <div class="menu-buttons">
+          <button id="btn-start-game" class="btn btn-primary">PLAY CAMPAIGN</button>
+          <button id="btn-start-endless" class="btn btn-primary" style="background: linear-gradient(135deg, var(--neon-pink) 0%, var(--neon-blue) 100%); box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);">PLAY ENDLESS</button>
+          <button id="btn-select-level" class="btn btn-secondary">SELECT LEVEL</button>
+          <button id="btn-open-stats" class="btn btn-secondary">STATS</button>
+          <button id="btn-open-settings" class="btn btn-secondary">SETTINGS</button>
+          <button id="btn-open-help" class="btn btn-secondary">HOW TO PLAY</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-level-select" class="screen-overlay hidden">
+      <div class="menu-box large-box">
+        <button class="btn-close" id="btn-close-level-select">&times;</button>
+        <h2 class="section-title">CHOOSE LEVEL</h2>
+        
+        <div id="levels-grid" class="levels-grid">
+          
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-settings" class="screen-overlay hidden">
+      <div class="menu-box">
+        <button class="btn-close" id="btn-close-settings">&times;</button>
+        <h2 class="section-title">SETTINGS</h2>
+        
+        <div class="settings-list">
+          <div class="setting-item">
+            <label for="slider-volume">SFX Volume</label>
+            <div class="volume-control">
+              <input type="range" id="slider-volume" min="0" max="100" value="70">
+              <span id="volume-val">70%</span>
+            </div>
+          </div>
+          <div class="setting-item">
+            <label for="select-theme">Visual Theme</label>
+            <select id="select-theme" class="select-input">
+              <option value="cyber-neon">Cyber Neon (Default)</option>
+              <option value="retro-amber">Retro Terminal (Amber)</option>
+              <option value="synthwave">Vaporwave (Sunset)</option>
+              <option value="matrix">Digital Rain (Green)</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label for="toggle-particles">Particle Effects</label>
+            <label class="switch">
+              <input type="checkbox" id="toggle-particles" checked>
+              <span class="slider-round"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-stats" class="screen-overlay hidden">
+      <div class="menu-box">
+        <button class="btn-close" id="btn-close-stats">&times;</button>
+        <h2 class="section-title">STATISTICS</h2>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-num" id="stat-high-score">0</span>
+            <span class="stat-desc">Campaign High</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="stat-endless-high">0</span>
+            <span class="stat-desc">Endless High</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="stat-endless-level">0</span>
+            <span class="stat-desc">Max Endless Lvl</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="stat-bricks-broken">0</span>
+            <span class="stat-desc">Bricks Broken</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="stat-powerups-collected">0</span>
+            <span class="stat-desc">Powerups Used</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="stat-games-played">0</span>
+            <span class="stat-desc">Games Played</span>
+          </div>
+        </div>
+        
+        <button id="btn-reset-stats" class="btn btn-danger-outline">RESET STATS</button>
+      </div>
+    </section>
+
+    <section id="screen-help" class="screen-overlay hidden">
+      <div class="menu-box large-box">
+        <button class="btn-close" id="btn-close-help">&times;</button>
+        <h2 class="section-title">HOW TO PLAY</h2>
+        
+        <div class="help-content">
+          <div class="help-section">
+            <h3>CONTROLS</h3>
+            <p><strong>Mobile:</strong> Tap and drag anywhere horizontally on the screen to slide the paddle.</p>
+            <p><strong>Desktop:</strong> Move mouse to guide the paddle, or use <kbd>←</kbd> and <kbd>→</kbd> arrow keys / <kbd>A</kbd> and <kbd>D</kbd>.</p>
+            <p><strong>Launch Ball:</strong> Ball launches automatically after 2 seconds.</p>
+          </div>
+
+          <div class="help-section">
+            <h3>BRICKS</h3>
+            <div class="brick-legend">
+              <div class="legend-row">
+                <span class="legend-brick brick-std"></span>
+                <span><strong>Standard Bricks:</strong> Break in 1 hit.</span>
+              </div>
+              <div class="legend-row">
+                <span class="legend-brick brick-strong"></span>
+                <span><strong>Armored Bricks:</strong> Require multiple hits (cracks form!).</span>
+              </div>
+              <div class="legend-row">
+                <span class="legend-brick brick-explosive"></span>
+                <span><strong>Explosive Bricks:</strong> Explode and damage adjacent blocks.</span>
+              </div>
+              <div class="legend-row">
+                <span class="legend-brick brick-indestructible"></span>
+                <span><strong>Solid Barriers:</strong> Cannot be broken normally (laser works!).</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="help-section">
+            <h3>POWER-UPS</h3>
+            <div class="powerup-legend">
+              <div class="legend-row">
+                <span class="legend-pwr pwr-expand">W</span>
+                <span><strong>Wide Paddle:</strong> Increases paddle size.</span>
+              </div>
+              <div class="legend-row">
+                <span class="legend-pwr pwr-multiball">M</span>
+                <span><strong>Multi-Ball:</strong> Generates 2 additional balls.</span>
+              </div>
+              <div class="legend-row">
+                <span class="legend-pwr pwr-sticky">S</span>
+                <span><strong>Sticky Paddle:</strong> Catches the ball on contact.</span>
+              </div>
+              <div class="legend-row">
+                <span class="legend-pwr pwr-laser">L</span>
+                <span><strong>Laser Gun:</strong> Shoot lasers to destroy bricks (Space/Tap).</span>
+              </div>
+              <div class="legend-row">
+                <span class="legend-pwr pwr-fireball">F</span>
+                <span><strong>Fire Ball:</strong> Pierces through bricks without bouncing.</span>
+              </div>
+              <div class="legend-row">
+                <span class="legend-pwr pwr-shield">U</span>
+                <span><strong>Bottom Shield:</strong> Forcefield blocks balls from falling once.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <section id="overlay-pause" class="screen-overlay hidden dark-blur">
+      <div class="menu-box">
+        <h2 class="game-title paused-title">GAME PAUSED</h2>
+        <div class="menu-buttons">
+          <button id="btn-resume" class="btn btn-primary">RESUME</button>
+          <button id="btn-restart-paused" class="btn btn-secondary">RESTART</button>
+          <button id="btn-exit-paused" class="btn btn-danger-outline">EXIT TO MENU</button>
+        </div>
+      </div>
+    </section>
+
+    
+    <section id="overlay-balllost" class="screen-overlay hidden dark-blur">
+      <div class="menu-box">
+        <div class="ball-lost-icon">💔</div>
+        <h2 class="game-title text-neon-pink" style="font-size:1.6rem;">BALL LOST!</h2>
+        <p class="summary-text" id="balllost-lives-text">You have <span id="balllost-lives-count" class="text-neon-cyan">4</span> lives remaining.</p>
+        <div class="menu-buttons">
+          <button id="btn-use-life" class="btn btn-primary">USE A LIFE ❤️</button>
+          <button id="btn-restart-lost" class="btn btn-secondary">RESTART LEVEL</button>
+          <button id="btn-exit-lost" class="btn btn-danger-outline">EXIT TO MENU</button>
+        </div>
+      </div>
+    </section>
+
+    
+    <section id="overlay-gameover" class="screen-overlay hidden dark-blur">
+      <div class="menu-box">
+        <h2 class="game-title text-neon-pink">GAME OVER</h2>
+        <p class="summary-text">Final Score: <span id="summary-score-over" class="text-neon-blue">0</span></p>
+        <p class="summary-text">Bricks Destroyed: <span id="summary-bricks-over" class="text-neon-blue">0</span></p>
+        <div class="menu-buttons">
+          <button id="btn-retry" class="btn btn-primary">PLAY AGAIN</button>
+          <button id="btn-exit-over" class="btn btn-secondary">MAIN MENU</button>
+        </div>
+      </div>
+    </section>
+
+    
+    <section id="overlay-gamewin" class="screen-overlay hidden dark-blur">
+      <div class="menu-box">
+        <h2 class="game-title text-neon-green">VICTORY!</h2>
+        <p class="game-subtitle">You have cleared all challenges!</p>
+        <p class="summary-text">Total Score: <span id="summary-score-win" class="text-neon-blue">0</span></p>
+        <p class="summary-text">Unused Lives Bonus: <span id="summary-lives-win" class="text-neon-blue">0</span></p>
+        <div class="menu-buttons">
+          <button id="btn-win-continue-endless" class="btn btn-primary">CONTINUE IN ENDLESS</button>
+          <button id="btn-win-replay" class="btn btn-secondary">REPLAY CAMPAIGN</button>
+          <button id="btn-exit-win" class="btn btn-secondary">MAIN MENU</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
